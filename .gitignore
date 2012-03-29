@@ -1,0 +1,19 @@
+# svn files #
+######################
+.svn
+# svn files #
+######################
+# Eclipse files #
+######################
+.buildpath
+.project
+.settings
+# OS generated files #
+######################
+.DS_Store?
+ehthumbs.db
+Icon?
+Thumbs.db
+# htaccess file #
+######################
+.htaccess
