@@ -139,7 +139,11 @@ class SsoController extends Zend_Controller_Action
 	public function infoAction()
 	{
 		$token = $this->getRequest()->getParam('token');
-		
+		if(empty($token)) {
+			$this->getResponse()->setHeader('result', 'fail');
+			$this->getResponse()->setHttpResponseCode(403);
+			$this->render('not-found');
+		}
 		$tokenCo = App_Factory::_m('Token');
 		$tokenDoc = $tokenCo->addFilter('token', $token)
 			->fetchOne();
