@@ -26,18 +26,4 @@ class Helper_Template extends Zend_Controller_Action_Helper_Abstract
 		$view->actionMenu = $menu;
 		return $this;
 	}
-	
-	/**
-	 * 
-	 * protal links, those are link tabs on the top right corner of the page
-	 * @param Array $portalArr, array(label, controllerName)
-	 */
-	public function portal($portalArr)
-	{
-		$layout = Zend_Layout::getMvcInstance();
-		$view = $layout->getView();
-		
-		$view->portalArr = $portalArr;
-		return $this;
-	}
 }

@@ -22,16 +22,30 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 	
     protected function _initController()
     {
-    	Zend_Controller_Action_HelperBroker::addPath(APP_PATH.'/helpers', 'Helper');
         $controller = Zend_Controller_Front::getInstance();
         $controller->setControllerDirectory(array(
             'default' => APP_PATH.'/default/controllers',
-        	'admin' => APP_PATH.'/admin/controllers'
+        	'admin' => APP_PATH.'/admin/controllers',
+        	'rest' => APP_PATH.'/rest/controllers'
         ));
         
         $controller->throwExceptions(true);
         Zend_Layout::startMvc();
         $layout = Zend_Layout::getMvcInstance();
         $layout->setLayout('template');
+        
+        //add action helper path
+        Zend_Controller_Action_HelperBroker::addPath(APP_PATH.'/helpers', 'Helper');
+        
+        //add view helper path
+        $view = Zend_Layout::getMvcInstance()->getView();
+        $view->addHelperPath(APP_PATH.'/helpers','Helper');
     }
+    
+	protected function _initRouter()
+	{
+		$controller = Zend_Controller_Front::getInstance();
+		$router = $controller->getRouter();
+		$router->addRoute('rest', new Zend_Rest_Route($controller, array(), array('rest')));
+	}
 }

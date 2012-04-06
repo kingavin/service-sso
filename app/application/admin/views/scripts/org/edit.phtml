@@ -1,1 +1,8 @@
 <?php echo $this->form?>
+
+<a href='/admin/user/create/orgCode/<?php echo $this->orgCode?>'>创建新用户</a>
+<?php foreach($this->userDocs as $doc) {?>
+
+<a href='/admin/user/edit/id/<?php echo $doc->getId()?>'><?php echo $doc->loginName?></a>
+
+<?php }?>
