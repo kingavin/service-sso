@@ -34,6 +34,14 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $layout = Zend_Layout::getMvcInstance();
         $layout->setLayout('template');
         
+        $csu = Class_Session_User::getInstance();
+        
+        $controller->registerPlugin(new App_Plugin_BackendSsoAuth(
+        	$csu,
+        	App_Plugin_BackendSsoAuth::CMS,
+        	Class_Server::API_KEY,
+        	array('admin', 'rest', 'user')
+        ));
         //add action helper path
         Zend_Controller_Action_HelperBroker::addPath(APP_PATH.'/helpers', 'Helper');
         
