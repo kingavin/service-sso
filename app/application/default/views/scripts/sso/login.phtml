@@ -1,7 +1,15 @@
-<ul class='errorMsg'>
-<?php foreach($this->errorMsg as $msg) {?>
-	<li><?php echo $msg?></li>
-<?php }?>
-</ul>
-
-<?php echo $this->form ?>
+<div class='login-page'>
+	<div class='head'>
+		用户登陆
+	</div>
+	
+	<ul class='errorMsg'>
+	<?php foreach($this->errorMsg as $msg) {?>
+		<li><?php echo $msg?></li>
+	<?php }?>
+	</ul>
+	
+	<?php echo $this->form ?>
+	
+	<hr />
+</div>
