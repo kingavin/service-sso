@@ -15,34 +15,6 @@ class SsoController extends Zend_Controller_Action
 		$this->view->userData = Zend_Json::decode($cru->getUserData());
 	}
 	
-	public function localLoginAction()
-	{
-		$form = new Zend_Form();
-		$form->addElement('text', 'loginName', array(
-			'label' => '登录名',
-			'required' => true
-		));
-		$form->addElement('password', 'password', array(
-			'label' => '密码',
-			'required' => true
-		));
-		$form->addElement('submit', 'submit', array(
-			'label' => '确认'
-		));
-		if($this->getRequest()->isPost() && $form->isValid($this->getRequest()->getParams())) {
-			$csr = Class_Session_RemoteUser::getInstance();
-			
-			if($csr->login($form->getValues())) {
-				$this->_helper->redirector->gotoSimple('index');
-			} else {
-				$form->addErrorMessage('用户找不到或者密码错误');
-			}
-		}
-		
-		$this->view->form = $form;
-		$this->view->errorMsg = $form->getErrorMessages();
-	}
-	
 	public function loginAction()
 	{
 		$consumer = $this->getRequest()->getParam('consumer');
@@ -74,6 +46,7 @@ class SsoController extends Zend_Controller_Action
 			$newToken->userData = $csr->getUserData();
 			$newToken->save();
 			header("Location: ".$ret);
+			exit(0);
 		}
 		
 		$form = new Zend_Form();
@@ -96,35 +69,12 @@ class SsoController extends Zend_Controller_Action
 				$newToken->userData = $csr->getUserData();
 				$newToken->save();
 				header("Location: ".$ret);
+				exit(0);
 			} else {
 				$form->addErrorMessage('用户找不到或者密码错误');
 			}
 		}
 		
-		$this->view->form = $form;
-		$this->view->errorMsg = $form->getErrorMessages();
-	}
-	
-	public function changePasswordAction()
-	{
-		require APP_PATH.'/default/forms/Sso/ChangePassword.php';
-		$form = new Form_Sso_ChangePassword();
-		if($this->getRequest()->isPost() && $form->isValid($this->getRequest()->getParams())) {
-			$csr = Class_Session_RemoteUser::getInstance();
-			$remoteUserId = $csr->getUserId();
-			$userDoc = App_Factory::_m('RemoteUser')->find($remoteUserId);
-			if(is_null($userDoc)) {
-				throw new Exception('remote user not found with id: '.$remoteUserId);
-			}
-			if($userDoc->password == Class_Session_RemoteUser::encryptPassword($form->getValue('password_old'))) {
-				$userDoc->password = Class_Session_RemoteUser::encryptPassword($form->getValue('password'));
-				$userDoc->save();
-				$this->_helper->flashMessenger->addMessage('密码已更新');
-				$this->_helper->redirector->gotoSimple('index');
-			} else {
-				$form->addErrorMessage('原密码不对！');
-			}
-		}
 		$this->view->form = $form;
 		$this->view->errorMsg = $form->getErrorMessages();
 	}
