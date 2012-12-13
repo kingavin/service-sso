@@ -62,16 +62,17 @@ class SsoController extends Zend_Controller_Action
 			'label' => '确认'
 		));
 		if($this->getRequest()->isPost() && $form->isValid($this->getRequest()->getParams())) {
-			if($csr->login($form->getValues())) {
+			$cookieData = $csr->login($form->getValues());
+			if($cookieData === false) {
+				$form->addErrorMessage('用户找不到或者密码错误');
+			} else {
 				$newToken = App_Factory::_m('Token')->create();
 				$newToken->token = $token;
-				$newToken->userId = $csr->getUserId();
-				$newToken->userData = $csr->getUserData();
+				$newToken->userId = $cookieData['userId'];
+				$newToken->userData = $cookieData['userData'];
 				$newToken->save();
 				header("Location: ".$ret);
 				exit(0);
-			} else {
-				$form->addErrorMessage('用户找不到或者密码错误');
 			}
 		}
 		
